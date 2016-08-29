@@ -36,7 +36,7 @@ public class JSONRPC {
 
     public String jsonrpc = "2.0";
     public String method;
-    public List<String> params;
+    public List<Object> params;
     public String id;
 
     public static long ID = 0;
@@ -54,7 +54,7 @@ public class JSONRPC {
      */
     public JSONRPC(Method method) {
         this.method = method.getMethodString();
-        this.params = new ArrayList<String>();
+        this.params = new ArrayList<Object>();
         this.id = "" + ID;
 
         ID++;
@@ -65,7 +65,7 @@ public class JSONRPC {
      * @param method the endpoint method
      * @param params the parameters for this method
      */
-    public JSONRPC(Method method, List<String> params) {
+    public JSONRPC(Method method, List<Object> params) {
         this.method = method.getMethodString();
         this.params = params;
         this.id = "" + ID;
@@ -91,7 +91,7 @@ public class JSONRPC {
         this.method = method.getMethodString();
         this.id = "" + ID;
 
-        List<String> ps = new ArrayList<>();
+        List<Object> ps = new ArrayList<>();
         ps.add(ByteUtil.toString00(marshalledObject.getBytes()));
         this.params = ps;
 
@@ -107,7 +107,7 @@ public class JSONRPC {
         this.method = method.getMethodString();
         this.id = "" + ID;
 
-        List<String> ps = new ArrayList<>();
+        List<Object> ps = new ArrayList<>();
         ps.add(ByteUtil.toString00(bytes));
         this.params = ps;
 
@@ -118,4 +118,19 @@ public class JSONRPC {
     public String toString() {
         return "JSONRPC [jsonrpc=" + jsonrpc + ", method=" + method + ", params=" + params + ", id=" + id + "]";
     }
+
+    public static JSONRPC blockHeight(int x) {
+        ArrayList<Object> list = new ArrayList<>();
+        list.add(x);
+        return new JSONRPC(Method.BLOCK_HEIGHT, list);
+    }
+
+    public static JSONRPC broadcastTXAsync(String tx) {
+        return new JSONRPC(Method.BROADCAST_TX_ASYNC, tx);
+    }
+
+    public static JSONRPC broadcastTXSync(String tx) {
+        return new JSONRPC(Method.BROADCAST_TX_SYNC, tx);
+    }
+
 }

@@ -23,36 +23,42 @@
  */
 package com.github.jtmsp.websocket.jsonrpc;
 
-/**
- * Tendermint-JSON-RPC Methods<br>
- * see <a href="https://github.com/tendermint/tendermint/wiki/RPC#endpoints">RPC#Endpoints</a> for more info
- */
-public enum Method {
+import java.util.Map;
 
-    NET_INFO("net_info"), //
-    STATUS("status"), //
-    DUMP_CONSENSUS_STATE("dump_consensus_state"), //
-    /** Shows unconfirmed transactions*/
-    UNCONFIRMED_TXS("unconfirmed_txs"), //
-    /** number of unconfirmed txs*/
-    NUM_UNCONFIRMED_TXS("num_unconfirmed_txs"), //
-    /** takes TX as parameter */
-    BROADCAST_TX_SYNC("broadcast_tx_sync"), //
-    /** takes TX as parameter */
-    BROADCAST_TX_ASYNC("broadcast_tx_async"), //
-    /** Retrieves information about the given block, takes height as parameter */
-    BLOCK_HEIGHT("block"), //
-    /** subscribes to an event, takes event as parameter*/
-    SUBSCRIBE_EVENT("subscribe");
+public class JSONRPCResultObject {
 
-    private final String methodString;
+    public int code;
+    public CodeType codeType;
+    public String data;
+    public String log;
 
-    Method(String method) {
-        this.methodString = method;
+    /**
+     * Convert the hashmap found in json to this object
+     * @param hashmap
+     * @return
+     */
+    public static JSONRPCResultObject get(Map<String, Object> hashmap) {
+        Double code = (Double) hashmap.get("code");
+        String data = (String) hashmap.get("data");
+        String log = (String) hashmap.get("log");
+
+        CodeType ct = CodeType.forNumber(code.intValue());
+
+        JSONRPCResultObject o = new JSONRPCResultObject();
+        o.code = code.intValue();
+        o.codeType = ct;
+        o.data = data;
+        o.log = log;
+        return o;
     }
 
-    public String getMethodString() {
-        return methodString;
+    /**
+     * Convert the hashmap found in json to this object
+     * @param hashmap
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static JSONRPCResultObject get(Object object) {
+        return get((Map<String, Object>) object);
     }
-
 }

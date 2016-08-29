@@ -24,14 +24,15 @@
 package com.github.jtmsp.websocket.example;
 
 import java.net.URISyntaxException;
-import java.nio.ByteBuffer;
 import java.util.Date;
 
 import org.java_websocket.handshake.ServerHandshake;
 
+import com.github.jtmsp.websocket.ByteUtil;
 import com.github.jtmsp.websocket.TMWSClient;
 import com.github.jtmsp.websocket.TMWSClient.WSListener;
 import com.github.jtmsp.websocket.jsonrpc.JSONRPC;
+import com.github.jtmsp.websocket.jsonrpc.JSONRPCResultObject;
 import com.github.jtmsp.websocket.jsonrpc.Method;
 
 public class StartupCounterExampleWebsocket {
@@ -70,16 +71,15 @@ public class StartupCounterExampleWebsocket {
 
             // Send numbers 0 to 99 in 1 second intervals
             for (int i = 0; i < 100; i++) {
-                ByteBuffer b = ByteBuffer.allocate(4);
-                b.putInt(i);
-
                 // prepare JSON-RPC package
-                JSONRPC j = new JSONRPC(Method.BROADCAST_TX_ASYNC, b.array());
+                JSONRPC j = new JSONRPC(Method.BROADCAST_TX_SYNC, ByteUtil.toBytes(i));
 
                 System.out.println("Sending:+ " + i);
                 final int finali = i;
                 cli.send(j, c -> {
-                    System.out.println("Receiving: " + finali + " " + c.result);
+                    JSONRPCResultObject rp = JSONRPCResultObject.get(c.result.get(1));
+                    System.out.println("Receiving: " + finali + " code:" + rp.code + "(" //
+                            + rp.codeType + ")" + " data:" + rp.data + " log:" + rp.log);
                 });
 
                 Thread.sleep(1000);

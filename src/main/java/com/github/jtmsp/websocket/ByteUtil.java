@@ -26,6 +26,7 @@ package com.github.jtmsp.websocket;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 
 public final class ByteUtil {
 
@@ -35,6 +36,10 @@ public final class ByteUtil {
 
     private ByteUtil() {
         // empty constructor for util class
+    }
+
+    public static byte[] toBytes(int value) {
+        return ByteBuffer.allocate(4).putInt(value).array();
     }
 
     public static String toString(byte[] bArr, ByteFormat format) {
