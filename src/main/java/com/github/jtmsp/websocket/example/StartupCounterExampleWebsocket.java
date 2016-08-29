@@ -53,6 +53,7 @@ public class StartupCounterExampleWebsocket {
             System.out.println("Starting Websocket");
             TMWSClient cli = new TMWSClient("http://localhost:46657/websocket");
 
+            // Add some Listeners to see whats going on
             cli.addListener(new WSListener() {
                 public void onOpen(ServerHandshake handshakedata) {
                     System.out.println(new Date() + " connection is open");
@@ -64,24 +65,28 @@ public class StartupCounterExampleWebsocket {
                 }
             });
 
+            // Start the actual connection
             cli.connectBlocking();
 
+            // Send numbers 0 to 99 in 1 second intervals
             for (int i = 0; i < 100; i++) {
                 ByteBuffer b = ByteBuffer.allocate(4);
                 b.putInt(i);
 
-                final int finali = i;
+                // prepare JSON-RPC package
                 JSONRPC j = new JSONRPC(Method.BROADCAST_TX_ASYNC, b.array());
-                System.out.println("Sending:+ " + finali);
+
+                System.out.println("Sending:+ " + i);
+                final int finali = i;
                 cli.send(j, c -> {
-                    System.out.println("Receiving:+ " + finali + " " + c.result);
+                    System.out.println("Receiving: " + finali + " " + c.result);
                 });
 
                 Thread.sleep(1000);
             }
 
-        } catch (URISyntaxException e) {
-        } catch (InterruptedException e) {
+        } catch (URISyntaxException | InterruptedException e) {
+            e.printStackTrace();
         }
 
     }
