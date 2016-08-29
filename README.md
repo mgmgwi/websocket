@@ -1,5 +1,5 @@
 # Websocket
-JSON RPC v2 Websocket Library
+JSON RPC v2 Websocket Library for Tendermint
 
 
 ## How to use
