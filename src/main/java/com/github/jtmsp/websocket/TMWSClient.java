@@ -49,6 +49,10 @@ import com.github.jtmsp.websocket.jsonrpc.JSONRPC;
 import com.github.jtmsp.websocket.jsonrpc.JSONRPCResult;
 import com.google.gson.Gson;
 
+/**
+ * TMWSClient models the websocket connection to the tendermint node
+ * @author @wolfposd
+ */
 public class TMWSClient extends WebSocketClient {
 
     private final Map<String, WSResponse> callbacks = new WeakHashMap<>();
@@ -61,8 +65,10 @@ public class TMWSClient extends WebSocketClient {
 
     /**
      * Creates a new Websocket client
+     * 
      * @param url
-     * @throws URISyntaxException If the URI is malformed
+     * @throws URISyntaxException
+     *             If the URI is malformed
      */
     public TMWSClient(String url) throws URISyntaxException {
         this(new URI(url));
@@ -70,6 +76,7 @@ public class TMWSClient extends WebSocketClient {
 
     /**
      * Creates a new Websocket client
+     * 
      * @param serverURI
      */
     public TMWSClient(URI serverURI) {
@@ -77,10 +84,20 @@ public class TMWSClient extends WebSocketClient {
         executorService.scheduleAtFixedRate(() -> sendPing(), 7, 7, TimeUnit.SECONDS);
     }
 
+    /**
+     * Add a listener to this TMWSClient
+     * 
+     * @param l
+     */
     public void addListener(WSListener l) {
         listeners.add(l);
     }
 
+    /**
+     * Removes a listener
+     * 
+     * @param l
+     */
     public void removeListener(WSListener l) {
         listeners.remove(l);
     }
@@ -97,10 +114,22 @@ public class TMWSClient extends WebSocketClient {
             WSResponse cb = callbacks.get(r.id);
             if (cb != null) {
                 cb.onJSONRPCResult(r);
+            } else {
+                System.out.println("NOCALLBACK:" + r);
             }
         }
     }
 
+    /**
+     * Sends a JSON-RPCv2 to the websocket endpoint
+     * 
+     * @param jsonRpc
+     *            payload
+     * @param callback
+     *            on server resonse or <code>null</code>
+     * @throws NotYetConnectedException
+     *             if WS is not connected
+     */
     public void send(JSONRPC jsonRpc, WSResponse callback) throws NotYetConnectedException {
         if (jsonRpc.id == null || jsonRpc.id.isEmpty())
             throw new IllegalArgumentException("jsonRPC.id cannot be null or empty");
@@ -108,7 +137,8 @@ public class TMWSClient extends WebSocketClient {
         if (callback != null) {
             callbacks.put(jsonRpc.id, callback);
         }
-        super.send(gson.toJson(jsonRpc));
+        String jsonString = gson.toJson(jsonRpc);
+        super.send(jsonString);
     }
 
     /**
@@ -160,20 +190,20 @@ public class TMWSClient extends WebSocketClient {
     private String getCodeName(int code) {
         String codeName;
         switch (code) {
-            case CloseFrame.NORMAL:
-                codeName = "NORMAL";
-                break;
-            case CloseFrame.ABNORMAL_CLOSE:
-                codeName = "ABNORMAL_CLOSE";
-                break;
-            case CloseFrame.BUGGYCLOSE:
-                codeName = "BUGGYCLOSE";
-                break;
-            case CloseFrame.PROTOCOL_ERROR:
-                codeName = "PROTOCOL_ERROR";
-                break;
-            default:
-                codeName = "" + code;
+        case CloseFrame.NORMAL:
+            codeName = "NORMAL";
+            break;
+        case CloseFrame.ABNORMAL_CLOSE:
+            codeName = "ABNORMAL_CLOSE";
+            break;
+        case CloseFrame.BUGGYCLOSE:
+            codeName = "BUGGYCLOSE";
+            break;
+        case CloseFrame.PROTOCOL_ERROR:
+            codeName = "PROTOCOL_ERROR";
+            break;
+        default:
+            codeName = "" + code;
         }
         return codeName;
     }
@@ -185,26 +215,68 @@ public class TMWSClient extends WebSocketClient {
         listeners.forEach(l -> l.onPingSent());
     }
 
+    /**
+     * Websocket listener interface
+     */
     public interface WSListener {
 
+        /**
+         * WS is opened with handshake
+         * 
+         * @param handshakedata
+         */
         default void onOpen(ServerHandshake handshakedata) {
         }
 
+        /**
+         * WS received a PING
+         * 
+         * @param conn
+         * @param f
+         */
         default void onPingReceived(WebSocket conn, Framedata f) {
         }
 
+        /**
+         * WS received a PONG
+         * 
+         * @param conn
+         * @param f
+         */
         default void onPongReceived(WebSocket conn, Framedata f) {
         }
 
+        /**
+         * We have sent a PING, approximately every 7 seconds
+         */
         default void onPingSent() {
         }
 
+        /**
+         * WS is performing handshakre
+         * 
+         * @param request
+         * @param response
+         */
         default void onHandshake(ClientHandshake request, ServerHandshake response) {
         }
 
+        /**
+         * WS has received an error
+         * 
+         * @param ex
+         */
         default void onError(Exception ex) {
         }
 
+        /**
+         * WS is closed
+         * 
+         * @param code
+         * @param codeName
+         * @param reason
+         * @param remote
+         */
         default void onClose(int code, String codeName, String reason, boolean remote) {
         }
     }

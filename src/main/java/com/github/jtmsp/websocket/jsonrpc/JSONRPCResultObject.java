@@ -25,6 +25,9 @@ package com.github.jtmsp.websocket.jsonrpc;
 
 import java.util.Map;
 
+/**
+ * Resultobject inside the resultobject XD
+ */
 public class JSONRPCResultObject {
 
     public int code;
@@ -34,6 +37,7 @@ public class JSONRPCResultObject {
 
     /**
      * Convert the hashmap found in json to this object
+     * 
      * @param hashmap
      * @return
      */
@@ -54,6 +58,7 @@ public class JSONRPCResultObject {
 
     /**
      * Convert the hashmap found in json to this object
+     * 
      * @param hashmap
      * @return
      */

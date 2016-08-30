@@ -25,6 +25,10 @@ package com.github.jtmsp.websocket;
 
 import com.github.jtmsp.websocket.jsonrpc.JSONRPCResult;
 
+/**
+ * WebsocketResponse interface
+ */
+@FunctionalInterface
 public interface WSResponse {
 
     public void onJSONRPCResult(JSONRPCResult result);

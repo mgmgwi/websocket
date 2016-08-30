@@ -38,29 +38,42 @@ public final class ByteUtil {
         // empty constructor for util class
     }
 
+    /**
+     * Converts an integer into a byte-array
+     * 
+     * @param value
+     * @return
+     */
     public static byte[] toBytes(int value) {
         return ByteBuffer.allocate(4).putInt(value).array();
     }
 
+    /**
+     * Writes a bytearray into a string with specified byteformat
+     * 
+     * @param bArr
+     *            target array
+     * @param format
+     *            target format
+     * @return formatted string
+     */
     public static String toString(byte[] bArr, ByteFormat format) {
         switch (format) {
-            case FORMAT_00:
-                return toString00(bArr);
-            case FORMAT_0x00:
-            default:
-                return toString0x00(bArr);
+        case FORMAT_00:
+            return toString00(bArr);
+        case FORMAT_0x00:
+        default:
+            return toString0x00(bArr);
         }
     }
 
     /**
-     * Formats the byte array into separated 0x00 blocks
-     * <br>
+     * Formats the byte array into separated 0x00 blocks <br>
      * [ca,fe,ba,be] =&gt; 0xca 0xfe 0xba 0xbe
      * 
      * @param bArr
      * @return formatted string
      */
-    @SuppressWarnings("boxing")
     public static String toString0x00(byte[] bArr) {
         if (bArr == null)
             return null;
@@ -73,14 +86,12 @@ public final class ByteUtil {
     }
 
     /**
-     * Formats the byte array into uppercase blocks
-     * <br>
+     * Formats the byte array into uppercase blocks <br>
      * [ca,fe,ba,be] =&gt; CAFEBABE
      * 
      * @param bArr
      * @return formatted string
      */
-    @SuppressWarnings("boxing")
     public static String toString00(byte[] bArr) {
         if (bArr == null)
             return null;

@@ -25,6 +25,9 @@ package com.github.jtmsp.websocket.jsonrpc;
 
 import java.util.List;
 
+/**
+ * Resultobject when communicating with tendermint node
+ */
 public class JSONRPCResult extends JSONRPC {
 
     // 0x0 bytes are for the blockchain
