@@ -26,10 +26,10 @@ package com.github.jtmsp.websocket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.channels.NotYetConnectedException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -55,7 +55,7 @@ import com.google.gson.Gson;
  */
 public class TMWSClient extends WebSocketClient {
 
-    private final Map<String, WSResponse> callbacks = new WeakHashMap<>();
+    private final Map<String, WSResponse> callbacks = new HashMap<>();
 
     private final Gson gson = new Gson();
 
@@ -114,6 +114,7 @@ public class TMWSClient extends WebSocketClient {
             WSResponse cb = callbacks.get(r.id);
             if (cb != null) {
                 cb.onJSONRPCResult(r);
+                callbacks.remove(cb);
             } else {
                 System.out.println("NOCALLBACK:" + r);
             }
