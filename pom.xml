@@ -23,9 +23,19 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.java-websocket</groupId>
-			<artifactId>Java-WebSocket</artifactId>
-			<version>1.3.0</version>
+			<groupId>org.glassfish.tyrus</groupId>
+			<artifactId>tyrus-client</artifactId>
+			<version>1.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.tyrus</groupId>
+			<artifactId>tyrus-container-grizzly-client</artifactId>
+			<version>1.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.tyrus.ext</groupId>
+			<artifactId>tyrus-client-java8</artifactId>
+			<version>LATEST</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>

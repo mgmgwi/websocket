@@ -21,22 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.jtmsp.websocket;
+package com.github.jtmsp.websocket.example;
 
-import com.github.jtmsp.websocket.jsonrpc.JSONRPCResult;
+import com.github.jtmsp.websocket.Websocket;
+import com.github.jtmsp.websocket.jsonrpc.JSONRPC;
 
-/**
- * WebsocketResponse interface
- */
-@FunctionalInterface
-public interface WSResponse {
+public class StartupWebsocket {
 
-    /**
-     * The websocket has received a response matching the ID given in
-     * the initial message.
-     * 
-     * @param result
-     */
-    public void onJSONRPCResult(JSONRPCResult result);
+    public static void main(String[] args) throws InterruptedException {
 
+        // create the websocket
+        Websocket ws = new Websocket();
+
+        System.out.println("waiting for open");
+        ws.reconnectWebsocket();
+        while (!ws.isOpen()) {
+            Thread.sleep(200);
+        }
+
+        System.out.println("sending message");
+        ws.sendMessage(JSONRPC.broadcastTXAsync("this is my testmessage"), response -> {
+            System.out.println("i got a response");
+        });
+
+        // wait some time, so we can receive a response
+        Thread.sleep(5000);
+
+        System.out.println("disconnecting");
+        ws.disconnect();
+    }
 }

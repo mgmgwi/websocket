@@ -23,21 +23,28 @@
  */
 package com.github.jtmsp.websocket.example;
 
+import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
 
-import org.java_websocket.handshake.ServerHandshake;
+import javax.websocket.CloseReason;
+import javax.websocket.CloseReason.CloseCodes;
+import javax.websocket.DeploymentException;
+import javax.websocket.EndpointConfig;
+import javax.websocket.Session;
+
+import org.glassfish.tyrus.ext.client.java8.SessionBuilder;
 
 import com.github.jtmsp.websocket.ByteUtil;
-import com.github.jtmsp.websocket.TMWSClient;
-import com.github.jtmsp.websocket.TMWSClient.WSListener;
 import com.github.jtmsp.websocket.jsonrpc.JSONRPC;
-import com.github.jtmsp.websocket.jsonrpc.JSONRPCResultObject;
+import com.github.jtmsp.websocket.jsonrpc.JSONRPCResult;
 import com.github.jtmsp.websocket.jsonrpc.Method;
+import com.google.gson.Gson;
 
 public class StartupCounterExampleWebsocket {
 
     public static boolean keepRunning = true;
+    private static Gson gson = new Gson();
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -50,44 +57,63 @@ public class StartupCounterExampleWebsocket {
     }
 
     private static void runloop() {
+        Session wsSession = null;
         try {
-            System.out.println("Starting Websocket");
-            TMWSClient cli = new TMWSClient("http://localhost:46657/websocket");
-
-            // Add some Listeners to see whats going on
-            cli.addListener(new WSListener() {
-                public void onOpen(ServerHandshake handshakedata) {
-                    System.out.println(new Date() + " connection is open");
-                }
-
-                public void onClose(int code, String codeName, String reason, boolean remote) {
-                    System.out.println(new Date() + " was closed: " + codeName + " " + code);
-                    keepRunning = false;
-                }
-            });
-
-            // Start the actual connection
-            cli.connectBlocking();
-
-            // Send numbers 0 to 99 in 1 second intervals
-            for (int i = 0; i < 100; i++) {
-                // prepare JSON-RPC package
-                JSONRPC j = new JSONRPC(Method.BROADCAST_TX_SYNC, ByteUtil.toBytes(i));
-
-                System.out.println("Sending:+ " + i);
-                final int finali = i;
-                cli.send(j, c -> {
-                    JSONRPCResultObject rp = JSONRPCResultObject.get(c.result.get(1));
-                    System.out.println("Receiving: " + finali + " code:" + rp.code + "(" //
-                            + rp.codeType + ")" + " data:" + rp.data + " log:" + rp.log);
-                });
-
-                Thread.sleep(1000);
-            }
-
-        } catch (URISyntaxException | InterruptedException e) {
+            wsSession = new SessionBuilder().uri(new URI("ws://127.0.0.1:46657/websocket"))//
+                    .onOpen(StartupCounterExampleWebsocket::onOpen)//
+                    .onClose((s, c) -> {
+                        System.out.println("ON CLOSE" + s.getRequestURI() + " reason: " + c.getReasonPhrase());
+                    }) //
+                    .onError((s, t) -> {
+                        System.out.println("ON ERROR:" + s + " throws:" + t.getMessage());
+                    }) //
+                    .messageHandler(String.class, StartupCounterExampleWebsocket::onMessage)//
+                    .connect();
+        } catch (IOException | DeploymentException | URISyntaxException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
+        System.out.println("waiting for open");
+        while (!wsSession.isOpen()) {
+            sleep(500);
+        }
+
+        spamNumbers(wsSession, 400, 500);
+
     }
+
+    public static void sleep(long ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+        }
+    }
+
+    private static void onOpen(Session s, EndpointConfig ec) {
+        System.out.println("yaaaay, we're open");
+    }
+
+    private static void spamNumbers(Session s, int start, int end) {
+        for (int i = start; i < end; i++) {
+            // prepare JSON-RPC package
+            JSONRPC j = new JSONRPC(Method.BROADCAST_TX_SYNC, ByteUtil.toBytes(i));
+
+            System.out.println("Sending message #" + i);
+            s.getAsyncRemote().sendText(gson.toJson(j));
+
+            sleep(1000);
+        }
+
+        try {
+            s.close(new CloseReason(CloseCodes.NORMAL_CLOSURE, "Manual Close"));
+        } catch (IOException e) {
+        }
+    }
+
+    private static void onMessage(String message) {
+        JSONRPCResult result = gson.fromJson(message, JSONRPCResult.class);
+        System.out.println("got answer to #" + result.id);
+    }
+
 }
