@@ -119,4 +119,13 @@ public final class ByteUtil {
         }
     }
 
+    public static byte[] fromString00(String string00) {
+        int len = string00.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(string00.charAt(i), 16) << 4) + Character.digit(string00.charAt(i + 1), 16));
+        }
+        return data;
+    }
+
 }
