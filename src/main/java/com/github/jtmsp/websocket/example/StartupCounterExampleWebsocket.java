@@ -39,6 +39,7 @@ import com.github.jtmsp.websocket.ByteUtil;
 import com.github.jtmsp.websocket.jsonrpc.JSONRPC;
 import com.github.jtmsp.websocket.jsonrpc.JSONRPCResult;
 import com.github.jtmsp.websocket.jsonrpc.Method;
+import com.github.jtmsp.websocket.jsonrpc.calls.StringParam;
 import com.google.gson.Gson;
 
 public class StartupCounterExampleWebsocket {
@@ -97,7 +98,7 @@ public class StartupCounterExampleWebsocket {
     private static void spamNumbers(Session s, int start, int end) {
         for (int i = start; i < end; i++) {
             // prepare JSON-RPC package
-            JSONRPC j = new JSONRPC(Method.BROADCAST_TX_SYNC, ByteUtil.toBytes(i));
+            JSONRPC j = new StringParam(Method.BROADCAST_TX_SYNC, ByteUtil.toBytes(i));
 
             System.out.println("Sending message #" + i);
             s.getAsyncRemote().sendText(gson.toJson(j));

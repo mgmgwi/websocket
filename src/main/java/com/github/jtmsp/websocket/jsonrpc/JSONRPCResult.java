@@ -63,10 +63,13 @@ public class JSONRPCResult extends JSONRPC {
     public List<Object> result;
     public String error;
 
+    public JSONRPCResult() {
+        super("result");
+    }
+
     @Override
     public String toString() {
-        return "JSONRPCResult [result=" + result + ", error=" + error + ", jsonrpc=" + jsonrpc + ", method=" + method + ", params="
-                + params + ", id=" + id + "]";
+        return "JSONRPCResult [result=" + result + ", error=" + error + ", jsonrpc=" + jsonrpc + ", method=" + method + ", id=" + id + "]";
     }
 
 }

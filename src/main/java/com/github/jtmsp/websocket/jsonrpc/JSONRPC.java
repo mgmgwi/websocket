@@ -23,114 +23,29 @@
  */
 package com.github.jtmsp.websocket.jsonrpc;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import com.github.jtmsp.websocket.ByteUtil;
-
 /**
  * Specification of Tendermint-Node JSON objects
  */
-public class JSONRPC {
+public abstract class JSONRPC {
 
-    public String jsonrpc = "2.0";
-    public String method;
-    public List<Object> params;
+    public final String jsonrpc = "2.0";
+    public final String method;
     public String id;
 
     public static long ID = 0;
 
-    /**
-     * Empty constructor for marshallers
-     */
-    public JSONRPC() {
-        // empty
+    public JSONRPC(String method) {
+        this.method = method;
+        this.id = "" + ID;
+
+        ID++;
     }
 
-    /**
-     * Creates a new rpc call with 0 Parameters
-     * @param method the endpoint methond
-     */
     public JSONRPC(Method method) {
         this.method = method.getMethodString();
-        this.params = new ArrayList<Object>();
         this.id = "" + ID;
 
         ID++;
-    }
-
-    /**
-     * Creates a new rpc call
-     * @param method the endpoint method
-     * @param params the parameters for this method
-     */
-    public JSONRPC(Method method, List<Object> params) {
-        this.method = method.getMethodString();
-        this.params = params;
-        this.id = "" + ID;
-
-        ID++;
-    }
-
-    /**
-     * Creates a new rpc call
-     * @param method the endpoint method
-     * @param params the parameters for this method
-     */
-    public JSONRPC(Method method, String... params) {
-        this(method, Arrays.asList(params));
-    }
-
-    /**
-     * Creates a new rpc call
-     * @param method the endpoint methond
-     * @param marshalledObject an already json-marchalled object
-     */
-    public JSONRPC(Method method, String marshalledObject) {
-        this.method = method.getMethodString();
-        this.id = "" + ID;
-
-        List<Object> ps = new ArrayList<>();
-        ps.add(ByteUtil.toString00(marshalledObject.getBytes()));
-        this.params = ps;
-
-        ID++;
-    }
-
-    /**
-     * Creates a new rpc call
-     * @param method the endpoint methond
-     * @param bytes a byte-array for parameter
-     */
-    public JSONRPC(Method method, byte[] bytes) {
-        this.method = method.getMethodString();
-        this.id = "" + ID;
-
-        List<Object> ps = new ArrayList<>();
-        ps.add(ByteUtil.toString00(bytes));
-        this.params = ps;
-
-        ID++;
-    }
-
-    @Override
-    public String toString() {
-        return "JSONRPC [jsonrpc=" + jsonrpc + ", method=" + method + ", params=" + params + ", id=" + id + "]";
-    }
-
-    public static JSONRPC blockHeight(int x) {
-        ArrayList<Object> list = new ArrayList<>();
-        list.add(x);
-        return new JSONRPC(Method.BLOCK_HEIGHT, list);
-    }
-
-    public static JSONRPC broadcastTXAsync(String tx) {
-        return new JSONRPC(Method.BROADCAST_TX_ASYNC, tx);
-    }
-
-    public static JSONRPC broadcastTXSync(String tx) {
-        return new JSONRPC(Method.BROADCAST_TX_SYNC, tx);
     }
 
 }

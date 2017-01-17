@@ -21,36 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.jtmsp.websocket.example;
+package com.github.jtmsp.websocket.jsonrpc.calls;
 
 import com.github.jtmsp.websocket.ByteUtil;
-import com.github.jtmsp.websocket.Websocket;
+import com.github.jtmsp.websocket.jsonrpc.JSONRPC;
 import com.github.jtmsp.websocket.jsonrpc.Method;
-import com.github.jtmsp.websocket.jsonrpc.calls.StringParam;
 
-public class StartupWebsocket {
+public class StringParam extends JSONRPC {
 
-    public static void main(String[] args) throws InterruptedException {
+    public final String[] params;
 
-        // create the websocket
-        Websocket ws = new Websocket();
+    public StringParam(Method m, String tx00Formatted) {
+        super(m);
+        params = new String[] { tx00Formatted };
+    }
 
-        System.out.println("waiting for open");
-        ws.reconnectWebsocket();
-        while (!ws.isOpen()) {
-            Thread.sleep(200);
+    public StringParam(Method m, byte[] bytes) {
+        super(m);
+        params = new String[] { ByteUtil.toString00(bytes) };
+    }
+
+    public StringParam(Method m, byte[][] bytes) {
+        super(m);
+
+        params = new String[bytes.length];
+
+        for (int i = 0; i < bytes.length; i++) {
+            params[i] = ByteUtil.toString00(bytes[i]);
         }
+    }
 
-        System.out.println("sending message");
-        ws.sendMessage(new StringParam(Method.BROADCAST_TX_ASYNC, ByteUtil.toString00("this is my testmessage".getBytes())), response -> {
-            System.out.println("i got a response");
-            System.out.println(response);
-        });
-
-        // wait some time, so we can receive a response
-        Thread.sleep(5000);
-
-        System.out.println("disconnecting");
-        ws.disconnect();
+    public StringParam(Method m, String[] tx00Formatted) {
+        super(m);
+        params = tx00Formatted;
     }
 }

@@ -21,36 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.jtmsp.websocket.example;
+package com.github.jtmsp.websocket.jsonrpc.calls;
 
-import com.github.jtmsp.websocket.ByteUtil;
-import com.github.jtmsp.websocket.Websocket;
+import com.github.jtmsp.websocket.jsonrpc.JSONRPC;
 import com.github.jtmsp.websocket.jsonrpc.Method;
-import com.github.jtmsp.websocket.jsonrpc.calls.StringParam;
 
-public class StartupWebsocket {
+public class IntParam extends JSONRPC {
 
-    public static void main(String[] args) throws InterruptedException {
+    public int[] params;
 
-        // create the websocket
-        Websocket ws = new Websocket();
-
-        System.out.println("waiting for open");
-        ws.reconnectWebsocket();
-        while (!ws.isOpen()) {
-            Thread.sleep(200);
-        }
-
-        System.out.println("sending message");
-        ws.sendMessage(new StringParam(Method.BROADCAST_TX_ASYNC, ByteUtil.toString00("this is my testmessage".getBytes())), response -> {
-            System.out.println("i got a response");
-            System.out.println(response);
-        });
-
-        // wait some time, so we can receive a response
-        Thread.sleep(5000);
-
-        System.out.println("disconnecting");
-        ws.disconnect();
+    public IntParam(Method m, int param) {
+        super(m);
+        params = new int[] { param };
     }
+
+    public IntParam(Method m, int[] params) {
+        super(m);
+        this.params = params;
+    }
+
 }
