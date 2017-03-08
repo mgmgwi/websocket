@@ -31,9 +31,32 @@ public class StringParam extends JSONRPC {
 
     public final String[] params;
 
-    public StringParam(Method m, String tx00Formatted) {
+    /***
+     * Creates a JSON-RPC with String parameters
+     * 
+     * @param method
+     * @param tx00Formatted
+     *            the given String must be a 00-formatted ByteString (see
+     *            {@link ByteUtil#toString00(byte[])})
+     */
+    public StringParam(Method method, String tx00Formatted) {
+        this(method, tx00Formatted, true);
+    }
+
+    /**
+     * Creates a JSON-RPC with String parameters
+     * 
+     * @param m
+     * @param string
+     *            the given String can be a 00-formatted ByteString (see
+     *            {@link ByteUtil#toString00(byte[])})
+     * @param isStringTX00formatted
+     *            <code>true</code> if String is 00-formated ByteString,
+     *            <code>false</code> it will be converted
+     */
+    public StringParam(Method m, String string, boolean isStringTX00formatted) {
         super(m);
-        params = new String[] { tx00Formatted };
+        params = new String[] { isStringTX00formatted ? string : ByteUtil.toString00(string.getBytes()) };
     }
 
     public StringParam(Method m, byte[] bytes) {

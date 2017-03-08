@@ -23,29 +23,34 @@
  */
 package com.github.jtmsp.websocket.jsonrpc;
 
+import com.github.jtmsp.websocket.jsonrpc.calls.IntParam;
+import com.github.jtmsp.websocket.jsonrpc.calls.StringParam;
+
 /**
- * Specification of Tendermint-Node JSON objects
+ * Specification of Tendermint-Node JSON objects sent via JSON-RPC<br>
+ * <br>
+ * Implemenations are: {@link IntParam} and {@link StringParam}
  */
 public abstract class JSONRPC {
 
-    public final String jsonrpc = "2.0";
-    public final String method;
-    public String id;
+	public final String jsonrpc = "2.0";
+	public final String method;
+	public String id;
 
-    public static long ID = 0;
+	public static long ID = 0;
 
-    public JSONRPC(String method) {
-        this.method = method;
-        this.id = "" + ID;
+	public JSONRPC(String method) {
+		this.method = method;
+		this.id = "" + ID;
 
-        ID++;
-    }
+		ID++;
+	}
 
-    public JSONRPC(Method method) {
-        this.method = method.getMethodString();
-        this.id = "" + ID;
+	public JSONRPC(Method method) {
+		this.method = method.getMethodString();
+		this.id = "" + ID;
 
-        ID++;
-    }
+		ID++;
+	}
 
 }
