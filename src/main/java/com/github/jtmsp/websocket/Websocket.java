@@ -140,7 +140,7 @@ public class Websocket {
      * Is this websocket connection open?
      */
     public boolean isOpen() {
-        return wsSession.isOpen();
+        return wsSession != null && wsSession.isOpen();
     }
 
     /**
