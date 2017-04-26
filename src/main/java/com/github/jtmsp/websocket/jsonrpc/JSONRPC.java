@@ -23,13 +23,14 @@
  */
 package com.github.jtmsp.websocket.jsonrpc;
 
+import com.github.jtmsp.websocket.jsonrpc.calls.EmptyParam;
 import com.github.jtmsp.websocket.jsonrpc.calls.IntParam;
 import com.github.jtmsp.websocket.jsonrpc.calls.StringParam;
 
 /**
  * Specification of Tendermint-Node JSON objects sent via JSON-RPC<br>
  * <br>
- * Implemenations are: {@link IntParam} and {@link StringParam}
+ * Implemenations are: {@link IntParam}, {@link StringParam} and {@link EmptyParam}
  */
 public abstract class JSONRPC {
 
