@@ -25,12 +25,13 @@ package com.github.jtmsp.websocket.example;
 
 import com.github.jtmsp.websocket.ByteUtil;
 import com.github.jtmsp.websocket.Websocket;
+import com.github.jtmsp.websocket.WebsocketException;
 import com.github.jtmsp.websocket.jsonrpc.Method;
 import com.github.jtmsp.websocket.jsonrpc.calls.StringParam;
 
 public class StartupWebsocket {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, WebsocketException {
 
         // create the websocket
         Websocket ws = new Websocket();

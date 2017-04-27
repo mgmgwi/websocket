@@ -23,29 +23,19 @@
  */
 package com.github.jtmsp.websocket.example;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import javax.websocket.CloseReason;
-import javax.websocket.CloseReason.CloseCodes;
-import javax.websocket.DeploymentException;
-import javax.websocket.EndpointConfig;
-import javax.websocket.Session;
-
-import org.glassfish.tyrus.ext.client.java8.SessionBuilder;
 
 import com.github.jtmsp.websocket.ByteUtil;
+import com.github.jtmsp.websocket.Websocket;
+import com.github.jtmsp.websocket.WebsocketException;
+import com.github.jtmsp.websocket.WebsocketStatus;
 import com.github.jtmsp.websocket.jsonrpc.JSONRPC;
-import com.github.jtmsp.websocket.jsonrpc.JSONRPCResult;
 import com.github.jtmsp.websocket.jsonrpc.Method;
 import com.github.jtmsp.websocket.jsonrpc.calls.StringParam;
-import com.google.gson.Gson;
 
 public class StartupCounterExampleWebsocket {
 
     public static boolean keepRunning = true;
-    private static Gson gson = new Gson();
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -58,29 +48,40 @@ public class StartupCounterExampleWebsocket {
     }
 
     private static void runloop() {
-        Session wsSession = null;
+
+        Websocket ws = new Websocket(new WebsocketStatus() {
+            @Override
+            public void wasOpened() {
+                System.out.println("is open");
+            }
+            @Override
+            public void wasClosed(CloseReason cr) {
+                System.out.println("is closed");
+                Thread.currentThread().interrupt();
+            }
+            @Override
+            public void hadError(Throwable t) {
+                System.out.println(t);
+            }
+        });
+
+        while (!ws.isOpen()) {
+            try {
+                System.out.println("connection try");
+                ws.connect();
+                sleep(400);
+            } catch (WebsocketException e) {
+            }
+        }
+
+        spamNumbers(ws, 1, 25);
+
         try {
-            wsSession = new SessionBuilder().uri(new URI("ws://127.0.0.1:46657/websocket"))//
-                    .onOpen(StartupCounterExampleWebsocket::onOpen)//
-                    .onClose((s, c) -> {
-                        System.out.println("ON CLOSE" + s.getRequestURI() + " reason: " + c.getReasonPhrase());
-                    }) //
-                    .onError((s, t) -> {
-                        System.out.println("ON ERROR:" + s + " throws:" + t.getMessage());
-                    }) //
-                    .messageHandler(String.class, StartupCounterExampleWebsocket::onMessage)//
-                    .connect();
-        } catch (IOException | DeploymentException | URISyntaxException e) {
-            // TODO Auto-generated catch block
+            ws.disconnect();
+        } catch (WebsocketException e) {
             e.printStackTrace();
         }
-
-        System.out.println("waiting for open");
-        while (!wsSession.isOpen()) {
-            sleep(500);
-        }
-
-        spamNumbers(wsSession, 400, 500);
+        keepRunning = false;
 
     }
 
@@ -91,30 +92,17 @@ public class StartupCounterExampleWebsocket {
         }
     }
 
-    private static void onOpen(Session s, EndpointConfig ec) {
-        System.out.println("yaaaay, we're open");
-    }
-
-    private static void spamNumbers(Session s, int start, int end) {
+    private static void spamNumbers(Websocket s, int start, int end) {
         for (int i = start; i < end; i++) {
             // prepare JSON-RPC package
             JSONRPC j = new StringParam(Method.BROADCAST_TX_SYNC, ByteUtil.toBytes(i));
 
-            System.out.println("Sending message #" + i);
-            s.getAsyncRemote().sendText(gson.toJson(j));
+            System.out.println("Sending message #" + i + "(msg.id:" + j.id + ")");
+            s.sendMessage(j, result -> {
+                System.out.println("got answer " + result.id);
+            });
 
-            sleep(1000);
-        }
-
-        try {
-            s.close(new CloseReason(CloseCodes.NORMAL_CLOSURE, "Manual Close"));
-        } catch (IOException e) {
+            sleep(600);
         }
     }
-
-    private static void onMessage(String message) {
-        JSONRPCResult result = gson.fromJson(message, JSONRPCResult.class);
-        System.out.println("got answer to #" + result.id);
-    }
-
 }

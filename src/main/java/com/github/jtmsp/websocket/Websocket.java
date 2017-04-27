@@ -106,8 +106,10 @@ public class Websocket {
 
     /**
      * Tries to open this websocket, if its already opened nothing happens
+     * 
+     * @throws WebsocketException
      */
-    public void reconnectWebsocket() {
+    public void reconnectWebsocket() throws WebsocketException {
 
         if (wsSession == null || !wsSession.isOpen()) {
             try {
@@ -118,21 +120,33 @@ public class Websocket {
                         .messageHandler(String.class, this::onMessage) //
                         .connect();
             } catch (IOException | DeploymentException e) {
-                e.printStackTrace();
+                throw new WebsocketException(e);
             }
         }
     }
 
     /**
+     * Tries to open this websocket, if its already opened nothing happens
+     * 
+     * @throws WebsocketException
+     */
+    public void connect() throws WebsocketException {
+        this.reconnectWebsocket();
+    }
+
+    /**
      * Disconnects this websocket<br>
      * It will send a NORMAL_CLOSURE to the WebsocketStatus
+     * 
+     * @throws WebsocketException
      */
-    public void disconnect() {
+    public void disconnect() throws WebsocketException {
         try {
             if (wsSession != null) {
                 wsSession.close(new CloseReason(CloseCodes.NORMAL_CLOSURE, "Manual Close"));
             }
         } catch (IOException e) {
+            throw new WebsocketException(e);
         }
     }
 
@@ -178,7 +192,7 @@ public class Websocket {
                 callbacks.remove(result.id);
             }
         } catch (JsonSyntaxException e) {
-            e.printStackTrace();
+            status.hadError(e);
         }
     }
 }
