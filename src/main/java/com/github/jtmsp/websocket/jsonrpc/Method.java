@@ -40,10 +40,14 @@ public enum Method {
     BROADCAST_TX_SYNC("broadcast_tx_sync"), //
     /** takes TX as parameter */
     BROADCAST_TX_ASYNC("broadcast_tx_async"), //
+    /** takes TX as parameter */
+    BROADCAST_TX_COMMIT("broadcast_tx_commit"), //
     /** Retrieves information about the given block, takes height as parameter */
     BLOCK_HEIGHT("block"), //
     /** subscribes to an event, takes event as parameter*/
-    SUBSCRIBE_EVENT("subscribe");
+    SUBSCRIBE_EVENT("subscribe"), //
+    /** Query a TX by its hash, hash=X prove={true/false}, use: MixedParam(TX, new Object[]{"HASHVALUEHERE",true})*/
+    TX("tx");
 
     private final String methodString;
 
