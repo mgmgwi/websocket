@@ -29,6 +29,8 @@ package com.github.jtmsp.websocket.jsonrpc;
  */
 public enum Method {
 
+    /** query the node-app, path=x, data=x, prove={true/false}; use: MixedParam(ABCI_QUERY, new Object[]{"value","value",true})    */
+    ABCI_QUERY("abci_query"), //
     NET_INFO("net_info"), //
     STATUS("status"), //
     DUMP_CONSENSUS_STATE("dump_consensus_state"), //
@@ -46,7 +48,7 @@ public enum Method {
     BLOCK_HEIGHT("block"), //
     /** subscribes to an event, takes event as parameter*/
     SUBSCRIBE_EVENT("subscribe"), //
-    /** Query a TX by its hash, hash=X prove={true/false}, use: MixedParam(TX, new Object[]{"HASHVALUEHERE",true})*/
+    /** Query a TX by its hash, hash=X prove={true/false}; use: MixedParam(TX, new Object[]{"HASHVALUEHERE",true})*/
     TX("tx");
 
     private final String methodString;
