@@ -25,7 +25,7 @@ package com.github.jtmsp.websocket.example;
 
 import javax.websocket.CloseReason;
 
-import com.github.jtmsp.websocket.ByteUtil;
+import com.github.jtendermint.crypto.ByteUtil;
 import com.github.jtmsp.websocket.Websocket;
 import com.github.jtmsp.websocket.WebsocketException;
 import com.github.jtmsp.websocket.WebsocketStatus;

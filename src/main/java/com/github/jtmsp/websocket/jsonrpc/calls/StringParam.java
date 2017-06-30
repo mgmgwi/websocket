@@ -23,7 +23,7 @@
  */
 package com.github.jtmsp.websocket.jsonrpc.calls;
 
-import com.github.jtmsp.websocket.ByteUtil;
+import com.github.jtendermint.crypto.ByteUtil;
 import com.github.jtmsp.websocket.jsonrpc.JSONRPC;
 import com.github.jtmsp.websocket.jsonrpc.Method;
 

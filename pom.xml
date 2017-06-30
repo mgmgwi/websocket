@@ -6,6 +6,13 @@
 	<groupId>com.github.jtmsp</groupId>
 	<artifactId>TendermintWebsocket</artifactId>
 	<version>0.0.2</version>
+	
+	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>
@@ -41,6 +48,11 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.7</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.github.jtendermint</groupId>
+		    <artifactId>crypto</artifactId>
+		    <version>-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
