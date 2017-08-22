@@ -60,7 +60,7 @@ public class JSONRPCResult extends JSONRPC {
     public static final int ResultTypeUnsafeWriteHeapProfile = 0xa3;
     public static final int ResultTypeUnsafeFlushMempool = 0xa4;
 
-    public List<Object> result;
+    public JSONRPCResultObject result;
     public String error;
 
     public JSONRPCResult() {

@@ -31,30 +31,10 @@ import java.util.Map;
 public class JSONRPCResultObject {
 
     public int code;
-    public CodeType codeType;
     public String data;
     public String log;
+    public String hash;
 
-    /**
-     * Convert the hashmap found in json to this object
-     * 
-     * @param hashmap
-     * @return
-     */
-    public static JSONRPCResultObject get(Map<String, Object> hashmap) {
-        Double code = (Double) hashmap.get("code");
-        String data = (String) hashmap.get("data");
-        String log = (String) hashmap.get("log");
-
-        CodeType ct = CodeType.forNumber(code.intValue());
-
-        JSONRPCResultObject o = new JSONRPCResultObject();
-        o.code = code.intValue();
-        o.codeType = ct;
-        o.data = data;
-        o.log = log;
-        return o;
-    }
 
     /**
      * Convert the hashmap found in json to this object
