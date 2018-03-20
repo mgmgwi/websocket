@@ -32,17 +32,17 @@
 		<dependency>
 			<groupId>org.glassfish.tyrus</groupId>
 			<artifactId>tyrus-client</artifactId>
-			<version>1.13</version>
+			<version>1.13.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.tyrus</groupId>
 			<artifactId>tyrus-container-grizzly-client</artifactId>
-			<version>1.13</version>
+			<version>1.13.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.tyrus.ext</groupId>
 			<artifactId>tyrus-client-java8</artifactId>
-			<version>LATEST</version>
+			<version>1.12</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>

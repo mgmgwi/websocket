@@ -23,9 +23,8 @@
  */
 package com.github.jtendermint.websocket.jsonrpc.calls;
 
-import org.bouncycastle.util.encoders.Base64;
+import java.util.Base64;
 
-import com.github.jtendermint.crypto.ByteUtil;
 import com.github.jtendermint.websocket.jsonrpc.JSONRPC;
 import com.github.jtendermint.websocket.jsonrpc.Method;
 
@@ -58,12 +57,12 @@ public class StringParam extends JSONRPC {
      */
     public StringParam(Method m, String string, boolean isStringTX00formatted) {
         super(m);
-        params = new String[] { isStringTX00formatted ? string : Base64.toBase64String(string.getBytes()) };
+        params = new String[] { isStringTX00formatted ? string : Base64.getEncoder().encodeToString(string.getBytes()) };
     }
 
     public StringParam(Method m, byte[] bytes) {
         super(m);
-        params = new String[] { Base64.toBase64String(bytes) };
+        params = new String[] { Base64.getEncoder().encodeToString(bytes) };
     }
 
     public StringParam(Method m, byte[][] bytes) {
@@ -72,7 +71,7 @@ public class StringParam extends JSONRPC {
         params = new String[bytes.length];
 
         for (int i = 0; i < bytes.length; i++) {
-            params[i] = Base64.toBase64String(bytes[i]);
+            params[i] = Base64.getEncoder().encodeToString(bytes[i]);
         }
     }
 

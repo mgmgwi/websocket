@@ -27,21 +27,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
-import javax.websocket.ClientEndpointConfig;
 import javax.websocket.CloseReason;
-import javax.websocket.Decoder;
 import javax.websocket.CloseReason.CloseCodes;
 import javax.websocket.DeploymentException;
-import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
-import javax.websocket.Extension;
 import javax.websocket.Session;
-import javax.websocket.ClientEndpointConfig.Configurator;
 
 import org.glassfish.tyrus.ext.client.java8.SessionBuilder;
 
@@ -63,7 +57,6 @@ public class Websocket {
     private Session wsSession;
     private Map<String, WSResponse> callbacks = new HashMap<>();
     private Gson gson = new Gson();
-    private URI destination;
     private WebsocketStatus status;
 
     private SessionBuilder builder;
@@ -111,11 +104,9 @@ public class Websocket {
     }
 
     private void setup(WebsocketStatus status, URI destination) {
-        this.destination = destination;
         this.status = status;
         if (this.status == null)
-            this.status = new WebsocketStatus() {
-            };
+            this.status = new WebsocketStatus() {};
 
         builder = new SessionBuilder().uri(destination) //
                 .onOpen(this::onOpen) //
