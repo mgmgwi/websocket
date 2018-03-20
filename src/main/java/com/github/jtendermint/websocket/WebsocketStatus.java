@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.jtmsp.websocket;
+package com.github.jtendermint.websocket;
 
 import javax.websocket.CloseReason;
 

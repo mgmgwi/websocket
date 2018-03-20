@@ -21,22 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.jtmsp.websocket;
+package com.github.jtendermint.websocket.jsonrpc.calls;
 
-import com.github.jtmsp.websocket.jsonrpc.JSONRPCResult;
+import com.github.jtendermint.websocket.jsonrpc.JSONRPC;
+import com.github.jtendermint.websocket.jsonrpc.Method;
 
-/**
- * WebsocketResponse interface
- */
-@FunctionalInterface
-public interface WSResponse {
+public class IntParam extends JSONRPC {
 
-    /**
-     * The websocket has received a response matching the ID given in
-     * the initial message.
-     * 
-     * @param result
-     */
-    public void onJSONRPCResult(JSONRPCResult result);
+    public int[] params;
+
+    public IntParam(Method m, int param) {
+        super(m);
+        params = new int[] { param };
+    }
+
+    public IntParam(Method m, int[] params) {
+        super(m);
+        this.params = params;
+    }
 
 }

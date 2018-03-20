@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.jtmsp.websocket.jsonrpc.calls;
+package com.github.jtendermint.websocket.jsonrpc.calls;
 
 import org.bouncycastle.util.encoders.Base64;
 
 import com.github.jtendermint.crypto.ByteUtil;
-import com.github.jtmsp.websocket.jsonrpc.JSONRPC;
-import com.github.jtmsp.websocket.jsonrpc.Method;
+import com.github.jtendermint.websocket.jsonrpc.JSONRPC;
+import com.github.jtendermint.websocket.jsonrpc.Method;
 
 public class StringParam extends JSONRPC {
 

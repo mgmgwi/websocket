@@ -21,15 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.jtmsp.websocket.jsonrpc.calls;
+package com.github.jtendermint.websocket;
 
-import com.github.jtmsp.websocket.jsonrpc.JSONRPC;
-import com.github.jtmsp.websocket.jsonrpc.Method;
+import com.github.jtendermint.websocket.jsonrpc.JSONRPCResult;
 
-public class EmptyParam extends JSONRPC {
+/**
+ * WebsocketResponse interface
+ */
+@FunctionalInterface
+public interface WSResponse {
 
-	public EmptyParam(Method method) {
-		super(method);
-	}
+    /**
+     * The websocket has received a response matching the ID given in
+     * the initial message.
+     * 
+     * @param result
+     */
+    public void onJSONRPCResult(JSONRPCResult result);
 
 }

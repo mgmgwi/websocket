@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.jtmsp.websocket.jsonrpc.calls;
+package com.github.jtendermint.websocket.jsonrpc.calls;
 
-import com.github.jtmsp.websocket.jsonrpc.JSONRPC;
-import com.github.jtmsp.websocket.jsonrpc.Method;
+import com.github.jtendermint.websocket.jsonrpc.JSONRPC;
+import com.github.jtendermint.websocket.jsonrpc.Method;
 
 public class MixedParam extends JSONRPC {
 

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.jtmsp.websocket.jsonrpc;
+package com.github.jtendermint.websocket.jsonrpc;
 
 /**
  * Resultobject inside the resultobject XD

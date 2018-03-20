@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.jtmsp.websocket;
+package com.github.jtendermint.websocket;
 
 import java.io.IOException;
 import java.net.URI;
@@ -37,8 +37,8 @@ import javax.websocket.Session;
 
 import org.glassfish.tyrus.ext.client.java8.SessionBuilder;
 
-import com.github.jtmsp.websocket.jsonrpc.JSONRPC;
-import com.github.jtmsp.websocket.jsonrpc.JSONRPCResult;
+import com.github.jtendermint.websocket.jsonrpc.JSONRPC;
+import com.github.jtendermint.websocket.jsonrpc.JSONRPCResult;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 

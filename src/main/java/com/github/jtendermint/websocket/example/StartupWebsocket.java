@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.jtmsp.websocket.example;
+package com.github.jtendermint.websocket.example;
 
-import com.github.jtmsp.websocket.Websocket;
-import com.github.jtmsp.websocket.WebsocketException;
-import com.github.jtmsp.websocket.jsonrpc.JSONRPC;
-import com.github.jtmsp.websocket.jsonrpc.Method;
-import com.github.jtmsp.websocket.jsonrpc.calls.StringParam;
+import com.github.jtendermint.websocket.Websocket;
+import com.github.jtendermint.websocket.WebsocketException;
+import com.github.jtendermint.websocket.jsonrpc.JSONRPC;
+import com.github.jtendermint.websocket.jsonrpc.Method;
+import com.github.jtendermint.websocket.jsonrpc.calls.StringParam;
 
 public class StartupWebsocket {
 

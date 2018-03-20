@@ -21,23 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.github.jtmsp.websocket.jsonrpc.calls;
+package com.github.jtendermint.websocket.jsonrpc;
 
-import com.github.jtmsp.websocket.jsonrpc.JSONRPC;
-import com.github.jtmsp.websocket.jsonrpc.Method;
+import com.github.jtendermint.websocket.jsonrpc.calls.EmptyParam;
+import com.github.jtendermint.websocket.jsonrpc.calls.IntParam;
+import com.github.jtendermint.websocket.jsonrpc.calls.StringParam;
 
-public class IntParam extends JSONRPC {
+/**
+ * Specification of Tendermint-Node JSON objects sent via JSON-RPC<br>
+ * <br>
+ * Implemenations are: {@link IntParam}, {@link StringParam} and {@link EmptyParam}
+ */
+public abstract class JSONRPC {
 
-    public int[] params;
+    public final String jsonrpc = "2.0";
+    public final String method;
+    public String id;
 
-    public IntParam(Method m, int param) {
-        super(m);
-        params = new int[] { param };
+    public static long ID = 0;
+
+    public JSONRPC(String method) {
+        this.method = method;
+        this.id = "" + ID;
+
+        ID++;
     }
 
-    public IntParam(Method m, int[] params) {
-        super(m);
-        this.params = params;
+    public JSONRPC(Method method) {
+        this.method = method.getMethodString();
+        this.id = "" + ID;
+
+        ID++;
     }
 
 }

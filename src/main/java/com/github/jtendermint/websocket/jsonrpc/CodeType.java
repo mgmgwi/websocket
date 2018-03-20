@@ -1,4 +1,4 @@
-package com.github.jtmsp.websocket.jsonrpc;
+package com.github.jtendermint.websocket.jsonrpc;
 
 /**
  * Protobuf enum {@code com.github.jtendermint.types.CodeType}
