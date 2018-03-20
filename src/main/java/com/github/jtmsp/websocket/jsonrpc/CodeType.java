@@ -1,7 +1,7 @@
 package com.github.jtmsp.websocket.jsonrpc;
 
 /**
- * Protobuf enum {@code com.github.jtmsp.types.CodeType}
+ * Protobuf enum {@code com.github.jtendermint.types.CodeType}
  */
 public enum CodeType {
     /**

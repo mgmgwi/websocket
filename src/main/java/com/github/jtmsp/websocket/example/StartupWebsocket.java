@@ -23,8 +23,6 @@
  */
 package com.github.jtmsp.websocket.example;
 
-import java.util.Map;
-
 import com.github.jtmsp.websocket.Websocket;
 import com.github.jtmsp.websocket.WebsocketException;
 import com.github.jtmsp.websocket.jsonrpc.JSONRPC;
@@ -34,19 +32,6 @@ import com.github.jtmsp.websocket.jsonrpc.calls.StringParam;
 public class StartupWebsocket {
 
     public static void main(String[] args) throws InterruptedException, WebsocketException {
-
-//        {
-//            System.out.println("target: BC278E0416E162CE6406A951A3D2C9AAE3C272F4");
-//
-//            // target BC278E0416E162CE6406A951A3D2C9AAE3C272F4
-//            final byte[] b = new byte[] { new Integer(0).byteValue() };
-//            byte[] b2 = new byte[] { 1, 1, b[0] };
-//
-//            System.out.println(RipeMD160.hashToStringBytes(b));
-//            System.out.println(RipeMD160.hashToStringBytes(b2));
-//
-//            System.exit(0);
-//        }
 
         // create the websocket
         Websocket ws = new Websocket();
@@ -65,25 +50,16 @@ public class StartupWebsocket {
             ws.sendMessage(tx, result -> {
 
                 System.out.println("TX: " + com.github.jtendermint.crypto.ByteUtil.toString00(b));
-                Map<String, Object> rs = (Map<String, Object>) result.result.get(1);
-
-                rs.forEach((key, value) -> {
-                    System.out.println(key + " : " + value);
-                });
-
-                // JSONRPCResultObject resOb = JSONRPCResultObject.get(result.result.get(1));
-                // System.out.println(resOb.data);
+                if (result.hasResult()) {
+                    System.out.println(result.getResult());
+                } else if (result.hasError()) {
+                    System.out.println(result.getError());
+                }
 
                 System.out.println();
             });
 
         }
-
-        // hash=BC278E0416E162CE6406A951A3D2C9AAE3C272F4
-        // hash=F17854A977F6FA7EEA1BD758E296710B86F72F3D
-        // hash=E286960272CE828CA930B0CFD5A62270216D2CC0
-        // hash=3AD11182CAEB2826616A2B32C5153D43C14BCD29
-        // hash=75F74A61F382B4A9D2F50C1E9987FCB58BB59E12
 
         // wait some time, so we can receive a response
         Thread.sleep(5000);

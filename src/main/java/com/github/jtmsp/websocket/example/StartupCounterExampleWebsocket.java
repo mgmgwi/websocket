@@ -61,7 +61,7 @@ public class StartupCounterExampleWebsocket {
             }
             @Override
             public void hadError(Throwable t) {
-                System.out.println(t);
+                t.printStackTrace();
             }
         });
 
@@ -74,7 +74,7 @@ public class StartupCounterExampleWebsocket {
             }
         }
 
-        spamNumbers(ws, 1, 25);
+        spamNumbers(ws, 0, 25);
 
         try {
             ws.disconnect();
@@ -95,11 +95,18 @@ public class StartupCounterExampleWebsocket {
     private static void spamNumbers(Websocket s, int start, int end) {
         for (int i = start; i < end; i++) {
             // prepare JSON-RPC package
+            System.out.println( ByteUtil.toString00(ByteUtil.toBytes(i)));
             JSONRPC j = new StringParam(Method.BROADCAST_TX_SYNC, ByteUtil.toBytes(i));
 
             System.out.println("Sending message #" + i + "(msg.id:" + j.id + ")");
             s.sendMessage(j, result -> {
-                System.out.println("got answer " + result.id);
+                System.out.println(
+                        "got answer " + result.id + " haserror?:" + result.hasError() + " hasresult?" + result.hasResult() + " result:" + result.getResult());
+
+                if (result.hasError()) {
+                    System.out.println(result.getError());
+                }
+
             });
 
             sleep(600);

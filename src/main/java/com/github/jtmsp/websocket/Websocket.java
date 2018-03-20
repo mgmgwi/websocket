@@ -81,9 +81,9 @@ public class Websocket {
         }
         this.status = status;
 
-        if (this.status == null)
-            this.status = new WebsocketStatus() {
-            };
+        if (this.status == null) {
+            this.status = new WebsocketStatus() {};
+        }
     }
 
     /**

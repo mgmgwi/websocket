@@ -23,8 +23,6 @@
  */
 package com.github.jtmsp.websocket.jsonrpc;
 
-import java.util.List;
-
 /**
  * Resultobject when communicating with tendermint node
  */
@@ -60,11 +58,27 @@ public class JSONRPCResult extends JSONRPC {
     public static final int ResultTypeUnsafeWriteHeapProfile = 0xa3;
     public static final int ResultTypeUnsafeFlushMempool = 0xa4;
 
-    public JSONRPCResultObject result;
-    public String error;
+    private ResultPayload result;
+    private ErrorPayload error;
+
+    public ResultPayload getResult() {
+        return result;
+    }
+
+    public ErrorPayload getError() {
+        return error;
+    }
 
     public JSONRPCResult() {
         super("result");
+    }
+
+    public boolean hasError() {
+        return error != null;
+    }
+
+    public boolean hasResult() {
+        return result != null;
     }
 
     @Override
