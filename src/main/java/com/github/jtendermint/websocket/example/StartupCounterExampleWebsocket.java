@@ -37,12 +37,12 @@ public class StartupCounterExampleWebsocket {
 
     public static boolean keepRunning = true;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 
         new Thread(StartupCounterExampleWebsocket::runloop).start();
 
         while (keepRunning) {
-            Thread.sleep(2000);
+            sleep(2000);
         }
 
     }
@@ -69,8 +69,11 @@ public class StartupCounterExampleWebsocket {
             try {
                 System.out.println("connection try");
                 ws.connect();
-                sleep(400);
+                System.out.println("sleeping 4000");
+                sleep(4000);
             } catch (WebsocketException e) {
+                System.err.println(e);
+                sleep(4000);
             }
         }
 

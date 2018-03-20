@@ -27,13 +27,21 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 
+import javax.websocket.ClientEndpointConfig;
 import javax.websocket.CloseReason;
+import javax.websocket.Decoder;
 import javax.websocket.CloseReason.CloseCodes;
 import javax.websocket.DeploymentException;
+import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
+import javax.websocket.Extension;
 import javax.websocket.Session;
+import javax.websocket.ClientEndpointConfig.Configurator;
 
 import org.glassfish.tyrus.ext.client.java8.SessionBuilder;
 
@@ -58,12 +66,14 @@ public class Websocket {
     private URI destination;
     private WebsocketStatus status;
 
+    private SessionBuilder builder;
+
     /**
      * Creates a new websocket to the default destination<br>
      * Websocket must be opened with {@link #reconnectWebsocket()}
      */
     public Websocket() {
-        this(null);
+        this(DEFAULT_DESTINATION, null);
     }
 
     /**
@@ -71,21 +81,22 @@ public class Websocket {
      * Websocket must be opened with {@link #reconnectWebsocket()}
      * 
      * @param status
-     *            will be notified about status changes, can be
-     *            <code>null</code>
+     *            will be notified about status changes, can be <code>null</code>
+     * @throws URISyntaxException 
      */
     public Websocket(WebsocketStatus status) {
-        try {
-            destination = new URI(DEFAULT_DESTINATION);
-        } catch (URISyntaxException e) {
-        }
-        this.status = status;
-
-        if (this.status == null) {
-            this.status = new WebsocketStatus() {};
-        }
+        this(DEFAULT_DESTINATION, status);
     }
 
+    
+    public Websocket(String uriString, WebsocketStatus status) {
+        try {
+            setup(status, new URI(uriString));
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+    
     /**
      * Creates a new websocket to the destination<br>
      * Websocket must be opened with {@link #reconnectWebsocket()}
@@ -93,17 +104,26 @@ public class Websocket {
      * @param destination
      *            destination URI
      * @param status
-     *            will be notified about status changes, can be
-     *            <code>null</code>
+     *            will be notified about status changes, can be <code>null</code>
      */
     public Websocket(URI destination, WebsocketStatus status) {
+       setup(status, destination);
+    }
+
+    private void setup(WebsocketStatus status, URI destination) {
         this.destination = destination;
         this.status = status;
         if (this.status == null)
             this.status = new WebsocketStatus() {
             };
-    }
 
+        builder = new SessionBuilder().uri(destination) //
+                .onOpen(this::onOpen) //
+                .onError(this::onError) //
+                .onClose(this::onClose) //
+                .messageHandler(String.class, this::onMessage);
+    }
+    
     /**
      * Tries to open this websocket, if its already opened nothing happens
      * 
@@ -111,14 +131,15 @@ public class Websocket {
      */
     public void reconnectWebsocket() throws WebsocketException {
 
+        System.out.println("wssession: " + wsSession);
+        if (wsSession != null) {
+            System.out.println("is open? " + wsSession.isOpen());
+        }
+        
         if (wsSession == null || !wsSession.isOpen()) {
+            System.out.println("connecting");
             try {
-                wsSession = new SessionBuilder().uri(destination) //
-                        .onOpen(this::onOpen) //
-                        .onError(this::onError) //
-                        .onClose(this::onClose) //
-                        .messageHandler(String.class, this::onMessage) //
-                        .connect();
+                wsSession = builder.connect();
             } catch (IOException | DeploymentException e) {
                 throw new WebsocketException(e);
             }
@@ -132,6 +153,30 @@ public class Websocket {
      */
     public void connect() throws WebsocketException {
         this.reconnectWebsocket();
+    }
+    
+    /**
+     * Connect to the remote (server) endpoint asynchronously.<br>
+     * Does not append callbacks or responses, need to handle manually<br>
+     * Raw websocket session
+     * 
+     * @return Future of session
+     */
+    public CompletableFuture<Session> connectAsync() {
+        return builder.connectAsync();
+    }
+
+    /**
+     * Connect to the remote (server) endpoint asynchronously.<br>
+     * Does not append callbacks or responses, need to handle manually<br>
+     * Raw websocket session
+     * 
+     * @param service
+     *            executor service used for executing the connect() method.
+     * @return completable future returning Session when created.
+     */
+    public CompletableFuture<Session> connectExecutor(ExecutorService service) {
+        return builder.connectAsync(service);
     }
 
     /**
