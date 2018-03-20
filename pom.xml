@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 
-	<groupId>com.github.jtmsp</groupId>
-	<artifactId>TendermintWebsocket</artifactId>
-	<version>0.0.2</version>
+	<groupId>com.github.jtendermint</groupId>
+	<artifactId>websocket-tendermint</artifactId>
+	<version>0.0.3</version>
 	
 	<repositories>
 		<repository>
