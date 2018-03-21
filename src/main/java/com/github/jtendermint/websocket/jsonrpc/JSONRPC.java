@@ -54,4 +54,11 @@ public abstract class JSONRPC {
         ID++;
     }
 
+    public String getMethod() {
+        return method;
+    }
+
+    public String getId() {
+        return id;
+    }
 }

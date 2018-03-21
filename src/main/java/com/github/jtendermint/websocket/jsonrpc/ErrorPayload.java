@@ -25,11 +25,11 @@ package com.github.jtendermint.websocket.jsonrpc;
 
 public class ErrorPayload {
 
-    private double code;
+    private int code;
     private String message;
     private String data;
 
-    public double getCode() {
+    public int getCode() {
         return code;
     }
 

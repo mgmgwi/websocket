@@ -23,6 +23,8 @@
  */
 package com.github.jtendermint.websocket.jsonrpc;
 
+import com.google.gson.JsonObject;
+
 /**
  * Resultobject when communicating with tendermint node
  */
@@ -58,10 +60,10 @@ public class JSONRPCResult extends JSONRPC {
     public static final int ResultTypeUnsafeWriteHeapProfile = 0xa3;
     public static final int ResultTypeUnsafeFlushMempool = 0xa4;
 
-    private ResultPayload result;
+    private JsonObject result;
     private ErrorPayload error;
 
-    public ResultPayload getResult() {
+    public JsonObject getResult() {
         return result;
     }
 
