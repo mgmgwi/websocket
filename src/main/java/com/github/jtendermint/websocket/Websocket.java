@@ -62,6 +62,7 @@ public class Websocket {
 
   private Session wsSession;
   private Map<String, WSResponse> callbacks = new HashMap<>();
+  private Map<String, WSSubscriptionHandler> eventCallbacks = new HashMap<>();
   private Gson gson = new Gson();
   private WebsocketStatus status;
 
@@ -212,6 +213,20 @@ public class Websocket {
     wsSession.getAsyncRemote().sendText(json);
   }
 
+  /**
+   * Sends a message towards the node, notifies the callback on response
+   * 
+   * @param rpc      message to send
+   * @param callback callback to notify
+   */
+  public void subscribe(JSONRPC rpc, WSResponse callback, WSSubscriptionHandler eventHandler) {
+    callbacks.put(rpc.id, callback);
+    eventCallbacks.put(rpc.id + "#event", eventHandler);
+    String json = gson.toJson(rpc);
+    LOG.info("Sending subsription: {}", json);
+    wsSession.getAsyncRemote().sendText(json);
+  }
+
   private void onOpen(Session s, EndpointConfig ec) {
     LOG.info("Websocket is now OPEN. SessionID= {}", s.getId());
     status.wasOpened();
@@ -236,6 +251,10 @@ public class Websocket {
       if (cb != null) {
         cb.onJSONRPCResult(result);
         callbacks.remove(result.id);
+      }
+      WSSubscriptionHandler handler = eventCallbacks.get(result.getId());
+      if (handler != null) {
+        handler.onSubscriptionEvent(result);
       }
     } catch (JsonSyntaxException e) {
       status.hadError(e);
